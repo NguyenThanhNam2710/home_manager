@@ -1,8 +1,26 @@
-<title>Gia đình Nam · Nguyệt · Thóc</title>
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#FAF7FC" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#16131B" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Gia đình">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="claude:viewport-fit-sides" content="cover">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="fonts/fonts.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Baloo+2:wght@600;700&display=swap">
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<title>Gia đình Nam · Nguyệt · Thóc</title>
+</head>
+<body>
 <style>
 /* Layout: phone-first app shell. Sticky header (tiêu đề, đổi người xem, tiêu đề cột), một vùng cuộn theo tab, thanh tab cố định ở đáy. Màu thành viên và nhóm việc lấy từ bảng 10 màu pastel (--pb nền nhạt, --pd màu đậm). Cột nội dung tối đa 520px. */
 :root{
@@ -399,6 +417,8 @@ details.tbl summary{cursor:pointer;font-weight:600;font-size:13px;color:var(--ac
 <div id="overlay" class="overlay" hidden><div id="sheet" class="sheet" role="dialog" aria-modal="true"></div></div>
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 
+<script src="config.js"></script>
+<script src="fb.js"></script>
 <script>
 (function(){
 'use strict';
@@ -1363,7 +1383,7 @@ function setHTML(){
   h+='</section>';
   h+='<section class="sec"><b>Giao diện</b><div class="card" style="display:flex;flex-direction:column;gap:12px"><div class="fl"><span class="eyebrow">Màu nền</span>'+segOpts('theme-set',S.theme,[['auto','Theo máy'],['light','Sáng'],['dark','Tối'],['rose','Hồng']],'Màu nền')+'</div><div class="fl"><span class="eyebrow">Kiểu hiển thị lịch ngày</span>'+segOpts('lstyle-set',S.lstyle,[['sess','Theo buổi'],['grid','Bảng giờ']],'Kiểu hiển thị lịch')+'</div><p class="hint">Chỉ áp dụng cho máy này. Theo buổi chia sáng, trưa, chiều, tối. Bảng giờ xếp từng giờ theo hàng, mỗi người một cột.</p></div></section>';
   h+='<section class="sec"><b>Dữ liệu</b><div class="card" style="display:flex;flex-direction:column;gap:10px"><div class="row"><span class="pill" id="syncpill2">'+esc(syncLabel())+'</span><span class="hint" id="synctxt">'+esc(SYNC_TEXT[SYNC.st])+'</span></div>'+
-   '<div class="row" style="flex-wrap:wrap"><button type="button" class="btn sm" data-act="reset-open" data-mode="sample">Về dữ liệu mẫu</button><button type="button" class="btn sm danger" data-act="reset-open" data-mode="clean">Xóa sạch để dùng thật</button></div>'+
+   '<div class="row" style="flex-wrap:wrap">'+(window.famSignOut?'<button type="button" class="btn sm" data-act="logout">Đăng xuất</button>':'')+'<button type="button" class="btn sm" data-act="reset-open" data-mode="sample">Về dữ liệu mẫu</button><button type="button" class="btn sm danger" data-act="reset-open" data-mode="clean">Xóa sạch để dùng thật</button></div>'+
    '<p class="hint">Xóa sạch chỉ bỏ chi tiêu, thu nhập đã ghi, yêu cầu mua đồ và lịch đã sửa. Thành viên, nhóm việc, khoản chi và nguồn thu được giữ lại.</p></div></section>';
   h+='<p class="foot">Thay đổi áp dụng ngay cho lịch, tab Tiền và các form. Dữ liệu demo, tải lại trang sẽ về mặc định.</p>';
   return h;
@@ -1668,6 +1688,7 @@ document.addEventListener('click',function(e){
   else if(a==='inc-src-pick'){S.is=S.is===el.dataset.v?'all':el.dataset.v;render()}
   else if(a==='inc-all'){S.incAll=!S.incAll;render()}
   else if(a==='ie-del'){INCLOG=INCLOG.filter(function(e){return e.id!==id});render();toast('Đã xóa lần ghi nhận')}
+  else if(a==='logout'){if(window.famSignOut)window.famSignOut()}
   else if(a==='reset-open'){openSheet({type:'reset',mode:el.dataset.mode})}
   else if(a==='reset-ok'){resetData(el.dataset.mode);closeSheet();render();toast(el.dataset.mode==='sample'?'Đã về dữ liệu mẫu':'Đã xóa sạch dữ liệu')}
   else if(a==='alert-x'){S.alert=null;render()}
@@ -1846,15 +1867,15 @@ applyTheme();
 /* ---------- lưu trữ dùng chung (capability db) ---------- */
 /* Tài liệu: fam/core (thành viên, nhóm việc, khoản chi, nguồn thu, yêu cầu mua), tx/<yyyy-mm>, inc/<yyyy-mm>, days/<yyyy-mm-dd> (chỉ ngày đã sửa) */
 var SYNC={db:null,ready:false,ro:false,st:'local',last:{},snap:{},timer:0,busy:false,again:false,defaults:'',retry:0};
-var SYNC_LABEL={local:'Demo',loading:'Đang tải…',saved:'Đã lưu',saving:'Đang lưu…',error:'Lỗi lưu',ro:'Chỉ xem',offline:'Chưa kết nối'};
+var SYNC_LABEL={local:'Chưa lưu',loading:'Đang tải…',saved:'Đã lưu',saving:'Đang lưu…',error:'Lỗi lưu',ro:'Chỉ xem',offline:'Ngoại tuyến'};
 var SYNC_TEXT={
- local:'Chưa kết nối kho lưu trữ nên dữ liệu chỉ nằm trong trang này và mất khi tải lại.',
+ local:'Chưa đăng nhập hoặc chưa kết nối kho lưu trữ nên dữ liệu chỉ nằm trong trang này.',
  loading:'Đang tải dữ liệu đã lưu…',
  saved:'Đã lưu. Mọi người mở trang này đều thấy cùng một dữ liệu.',
  saving:'Đang lưu…',
  error:'Lưu chưa được, app sẽ tự thử lại.',
  ro:'Bạn chỉ xem được. Cần quyền Contributor trở lên trong mục Chia sẻ để lưu thay đổi.',
- offline:'Chưa kết nối được kho lưu trữ. Thay đổi hiện chỉ có trên máy này.'
+ offline:'Chưa có mạng. Thay đổi được giữ trên máy này và tự gửi đi khi có mạng.'
 };
 function syncLabel(){return SYNC_LABEL[SYNC.st]}
 function setSt(st){
@@ -1971,8 +1992,8 @@ function syncInit(){
   if(!(window.claude&&window.claude.use))return;
   window.claude.use('db').then(function(db){
     if(!db)return;
-    SYNC.db=db;setSt('loading');
-    var got={},cnt=0,timer=setTimeout(function(){if(!SYNC.ready)setSt('offline')},10000);
+    SYNC.db=db;setSt('loading');if(window.FAM_VIEWER&&M[window.FAM_VIEWER]&&M[window.FAM_VIEWER].acct)S.viewer=window.FAM_VIEWER;
+    var got={},cnt=0,timer=setTimeout(function(){if(!SYNC.ready){if(SYNC.snap.core&&SYNC.snap.core.exists&&SYNC.snap.tx&&SYNC.snap.inc&&SYNC.snap.days)onData();else setSt('offline')}},6000); /* không có mạng: dùng bản lưu trên máy */
     var one=function(name){return function(snap){
       SYNC.snap[name]=snap;
       if(!SYNC.ready){
@@ -2001,3 +2022,5 @@ syncTab();
 syncInit();
 })();
 </script>
+
+</body></html>
