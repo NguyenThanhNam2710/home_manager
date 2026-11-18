@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#FAF7FC" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#16131B" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#FAF7FC" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Gia đình">
@@ -79,6 +79,7 @@
 :root[data-theme="rose"] .tabbar{background:rgba(255,255,255,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 -6px 24px rgba(201,50,115,.10)}
 :root[data-theme="rose"] .bar i{background:linear-gradient(90deg,#F27BA9,#C93273)}
 *{box-sizing:border-box}
+html,body{width:100%;min-width:0;overflow-x:hidden}
 body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:14px;line-height:1.45;-webkit-text-size-adjust:100%}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:30}
 button,input,select,textarea{font:inherit;color:inherit}
@@ -88,7 +89,7 @@ h1,h2,h3,p{margin:0}
 .num{font-variant-numeric:tabular-nums}
 .muted{color:var(--muted)}
 
-.shell{max-width:520px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 96px}
+.shell{width:100%;min-width:0;max-width:520px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 96px}
 header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);padding-block:10px 8px;box-shadow:0 1px 0 var(--line)}
 .hrow{display:flex;align-items:center;justify-content:space-between;gap:8px}
 h1{font-family:var(--font-display);font-weight:700;font-size:18px;line-height:1.1;display:flex;align-items:center;gap:8px;min-width:0}
@@ -387,6 +388,8 @@ details.tbl summary{cursor:pointer;font-weight:600;font-size:13px;color:var(--ac
 .note{font-size:12.5px;color:var(--muted)}
 
 /* Sheet */
+/* Keep native hidden state authoritative, including modal overlays and toasts. */
+[hidden]{display:none!important}
 .overlay{position:fixed;inset:0;background:rgba(20,16,26,.5);display:flex;align-items:flex-end;justify-content:center;z-index:40}
 .sheet{width:100%;max-width:520px;max-height:92%;overflow-y:auto;background:var(--surface);border-radius:20px 20px 0 0;padding:16px max(16px,env(safe-area-inset-left,0px)) calc(20px + env(safe-area-inset-bottom,0px))}
 .sheet form,.sheet .form{display:flex;flex-direction:column;gap:14px}
@@ -2104,7 +2107,7 @@ document.addEventListener('change',function(e){
   if(e.target&&e.target.id==='q-cumul'){var cw=$('#carry-wrap');if(cw)cw.hidden=!e.target.checked}
 });
 try{var vp=localStorage.getItem('fam-viewer');if(vp&&M[vp]&&M[vp].acct)S.viewer=vp}catch(e){}
-S.theme='auto';S.lstyle='sess';S.gy=parseKey(today).getFullYear();S.pseed={van:0,tri:0,ngon:0};S.gtab='goal';
+S.theme='light';S.lstyle='sess';S.gy=parseKey(today).getFullYear();S.pseed={van:0,tri:0,ngon:0};S.gtab='goal';
 try{var th=localStorage.getItem('fam-theme');if(th==='light'||th==='dark'||th==='rose')S.theme=th;if(localStorage.getItem('fam-lstyle')==='grid')S.lstyle='grid'}catch(e){}
 function applyTheme(){var r=document.documentElement;if(S.theme==='light'||S.theme==='dark'||S.theme==='rose')r.setAttribute('data-theme',S.theme);else r.removeAttribute('data-theme')}
 applyTheme();
