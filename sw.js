@@ -1,5 +1,5 @@
 /* Service worker: giữ vỏ app để mở được khi mất mạng. Dữ liệu do Firestore tự lưu trên máy. */
-var CACHE='fam-ef440deb44';
+var CACHE='fam-9b72f27de6';
 var SHELL=['./','index.html','fb.js','config.js','manifest.webmanifest','fonts/fonts.css','icons/icon-192.png','icons/icon-512.png','icons/apple-touch-icon.png'];
 self.addEventListener('install',function(e){
   e.waitUntil(caches.open(CACHE).then(function(c){return c.addAll(SHELL)}).then(function(){return self.skipWaiting()}));
